@@ -1,11 +1,10 @@
 package chat.client;
 
 import java.sql.*;
-import java.util.Arrays;
 
 public class AuthService {
 
-    private static Connection connection = null;
+    private Connection connection;
 
     private void start() {
         try {
@@ -20,26 +19,30 @@ public class AuthService {
     private void close() {
         try {
             connection.close();
-            connection = null;
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     public boolean checkUser(String user, char[] pass) {
-        Statement stmt;
         start();
+
         try {
-            stmt = connection.createStatement();
-            ResultSet resultSet = stmt.executeQuery("SELECT Password FROM users WHERE login = '" + user + "'");
-            if (resultSet.next()) {
+            PreparedStatement selectUser = connection.prepareStatement("SELECT Password FROM users WHERE login = ?");
+            PreparedStatement updateLoggedInUser = connection.prepareStatement("UPDATE users set loggedin = 1 WHERE login = ?");
+            selectUser.setString(1, user);
+            ResultSet password = selectUser.executeQuery();
+            if (password.next()) {
                 String checkpass = new String(pass);
-                String passForCheck = resultSet.getString("Password");
+                String passForCheck = password.getString("Password");
                 if (passForCheck.equals(checkpass)) {
-                    stmt.executeUpdate("UPDATE users set loggedin = 1 WHERE login = '" + user + "'");
+                    updateLoggedInUser.setString(1, user);
+                    updateLoggedInUser.executeUpdate();
+                    //connection.commit();
                     return true;
                 }
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -57,6 +60,7 @@ public class AuthService {
         try {
             stmt = connection.createStatement();
             int result = stmt.executeUpdate("UPDATE users set loggedin = 1 WHERE login = '" + user + "'");
+            //connection.commit();
             close();
         } catch (SQLException e) {
             e.printStackTrace();

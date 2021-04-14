@@ -18,10 +18,10 @@ public class ClientWindow extends JFrame implements ActionListener, TCPConnectio
     private static final int HEIGHT = 400;
     private final String CHANGE_LOGIN = "Swap Nickname";
 
-    private final JTextArea log = new JTextArea();
-    private final JTextField fieldInput = new JTextField();
+    private JTextArea log = new JTextArea();
+    private JTextField fieldInput = new JTextField();
     private final JButton changeLogin = new JButton(CHANGE_LOGIN);
-    private final JTextField fieldNickName;
+    private JTextField fieldNickName;
 
     private TCPConnection connection;
 
