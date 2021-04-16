@@ -2,7 +2,6 @@ package chat.server;
 
 import chat.network.TCPConnection;
 import chat.network.TCPConnectionListener;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;

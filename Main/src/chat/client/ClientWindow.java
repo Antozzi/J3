@@ -2,7 +2,6 @@ package chat.client;
 
 import chat.network.TCPConnection;
 import chat.network.TCPConnectionListener;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -11,7 +10,7 @@ import java.io.IOException;
 
 public class ClientWindow extends JFrame implements ActionListener, TCPConnectionListener {
 
-    private static final String IP_ADDRS = "192.168.0.10";
+    private static final String IP_ADDRS = "192.168.0.103";
     private static final int PORT = 8189;
 
     private static final int WIDTH = 600;
@@ -23,7 +22,7 @@ public class ClientWindow extends JFrame implements ActionListener, TCPConnectio
     private final JButton changeLogin = new JButton(CHANGE_LOGIN);
     private final JTextField fieldNickName;
 
-    private TCPConnection connection;
+    private static TCPConnection connection;
 
     public ClientWindow() {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
