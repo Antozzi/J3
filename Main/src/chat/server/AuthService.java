@@ -1,8 +1,9 @@
-package chat.client;
+package chat.server;
 
 import chat.database.DBConn;
 
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 
 public class AuthService {

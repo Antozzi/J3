@@ -2,6 +2,8 @@ package chat.client;
 
 import chat.network.TCPConnection;
 import chat.network.TCPConnectionListener;
+import chat.server.AuthService;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
