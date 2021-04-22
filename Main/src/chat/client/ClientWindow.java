@@ -1,7 +1,10 @@
 package chat.client;
 
+import chat.database.HistoryLogger;
 import chat.network.TCPConnection;
 import chat.network.TCPConnectionListener;
+import chat.server.AuthService;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -13,11 +16,12 @@ public class ClientWindow extends JFrame implements ActionListener, TCPConnectio
     private static final String IP_ADDRS = "192.168.0.103";
     private static final int PORT = 8189;
 
-    private static final int WIDTH = 600;
-    private static final int HEIGHT = 400;
+    private static final int WIDTH = 500;
+    private static final int HEIGHT = 500;
     private final String CHANGE_LOGIN = "Swap Nickname";
 
-    private final JTextArea log = new JTextArea();
+    private static final JTextArea log = new JTextArea();
+    private static final JScrollPane scroll = new JScrollPane(log);
     private final JTextField fieldInput = new JTextField();
     private final JButton changeLogin = new JButton(CHANGE_LOGIN);
     private final JTextField fieldNickName;
@@ -43,7 +47,9 @@ public class ClientWindow extends JFrame implements ActionListener, TCPConnectio
 
         log.setEditable(false);
         log.setLineWrap(true);
-        add(log, BorderLayout.CENTER);
+        scroll.setBounds(10, 60, 780, 500);
+        scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        add(scroll, BorderLayout.CENTER);
 
         fieldInput.addActionListener(this);
         add(fieldInput, BorderLayout.SOUTH);
@@ -70,13 +76,16 @@ public class ClientWindow extends JFrame implements ActionListener, TCPConnectio
             if (msg.equals("")) return;
             fieldInput.setText(null);
             connection.sendString(fieldNickName.getText() + ": " + msg);
+            HistoryLogger.doLogWriter(msg);
         }
     }
 
 
     @Override
     public void onConnectionReady(TCPConnection tcpConnection) {
-        printMsg("Connection ready...");
+        printMsg("Connection ready...\n");
+        printMsg("History Log:\n");
+        HistoryLogger.doLogReader();
     }
 
     @Override
@@ -94,10 +103,11 @@ public class ClientWindow extends JFrame implements ActionListener, TCPConnectio
         printMsg("Connection exception: " + e);
     }
 
-    private synchronized void printMsg(String msg) {
+    public static synchronized void printMsg(String msg) {
         SwingUtilities.invokeLater(() -> {
             log.append(msg + "\n");
             log.setCaretPosition(log.getDocument().getLength());
+            HistoryLogger.doLogWriter(msg);
         });
     }
 }
