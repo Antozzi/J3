@@ -1,6 +1,14 @@
+
+
+
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println("Nothing is in here....");
-    }
+
+        TestAll testAll = new TestAll();
+
+        testAll.start(ClassTestWithOrderedPriority.class);
+        testAll.start(ClassTestWithSinglePriority.class);
+        testAll.start(ClassTestWithSeveralAnnots.class);
+        }
 }
